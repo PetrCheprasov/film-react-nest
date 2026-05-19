@@ -12,8 +12,6 @@ export class OrderService {
   async createOrder(
     order: CreateOrderDto,
   ): Promise<ListResponseDto<OrderTicketResultDto>> {
-    this.validateOrder(order);
-
     const seatsBySession = new Map<string, string[]>();
     const ticketsBySession = new Map<string, TicketDto[]>();
 
@@ -69,30 +67,5 @@ export class OrderService {
     }
 
     return new ListResponseDto(results);
-  }
-
-  private validateOrder(order: CreateOrderDto): void {
-    if (!order.email || !order.phone || !order.tickets?.length) {
-      throw new HttpException(
-        { error: 'Invalid order data' },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    for (const ticket of order.tickets) {
-      if (
-        !ticket.film ||
-        !ticket.session ||
-        !ticket.daytime ||
-        ticket.row === undefined ||
-        ticket.seat === undefined ||
-        ticket.price === undefined
-      ) {
-        throw new HttpException(
-          { error: 'Invalid ticket data' },
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-    }
   }
 }

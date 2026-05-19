@@ -50,29 +50,27 @@ export class FilmsMongoRepository
     sessionId: string,
     seats: string[],
   ): Promise<boolean> {
-    for (const seat of seats) {
-      const result = await this.filmModel.updateOne(
-        {
-          id: filmId,
-          schedule: {
-            $elemMatch: {
-              id: sessionId,
-              taken: { $nin: [seat] },
-            },
+    const result = await this.filmModel.updateOne(
+      {
+        id: filmId,
+        schedule: {
+          $elemMatch: {
+            id: sessionId,
+            taken: { $nin: seats },
           },
         },
-        { $push: { 'schedule.$[session].taken': seat } },
-        {
-          arrayFilters: [{ 'session.id': sessionId }],
+      },
+      {
+        $push: {
+          'schedule.$[session].taken': { $each: seats },
         },
-      );
+      },
+      {
+        arrayFilters: [{ 'session.id': sessionId }],
+      },
+    );
 
-      if (result.modifiedCount === 0) {
-        return false;
-      }
-    }
-
-    return true;
+    return result.modifiedCount > 0;
   }
 
   static async connect(config: AppConfig): Promise<void> {

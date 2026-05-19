@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ListResponseDto } from '../common/dto/list-response.dto';
 import { FilmsRepository } from '../repository/films.repository';
 import { FilmDto, ScheduleDto } from './dto/films.dto';
@@ -16,10 +16,7 @@ export class FilmsService {
     const items = await this.filmsRepository.findScheduleByFilmId(filmId);
 
     if (items === null) {
-      throw new HttpException(
-        { error: 'Film not found' },
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException({ error: 'Film not found' });
     }
 
     return new ListResponseDto(items);
