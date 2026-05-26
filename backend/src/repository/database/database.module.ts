@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import * as path from 'path';
 import { Film } from '../entities/film.entity';
 import { Schedule } from '../entities/schedule.entity';
 
@@ -44,8 +45,8 @@ function buildPostgresOptions(
     username,
     password,
     database,
-    entities: [Film, Schedule],
-    synchronize: false,
+    entities: [path.join(__dirname, '..', '**', '*.entity.{ts,js}')],
+    synchronize: configService.get<string>('NODE_ENV') !== 'production',
   };
 }
 

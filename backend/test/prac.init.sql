@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS schedules;
 DROP TABLE IF EXISTS films;
 
 CREATE TABLE films (
-    id VARCHAR(36) PRIMARY KEY,
+    id UUID PRIMARY KEY,
     rating NUMERIC(4, 1) NOT NULL,
     director VARCHAR(255) NOT NULL,
     tags TEXT[] NOT NULL,
@@ -15,8 +15,8 @@ CREATE TABLE films (
 );
 
 CREATE TABLE schedules (
-    id VARCHAR(36) PRIMARY KEY,
-    film_id VARCHAR(36) NOT NULL REFERENCES films(id) ON DELETE CASCADE,
+    id UUID PRIMARY KEY,
+    film_id UUID NOT NULL REFERENCES films(id) ON DELETE CASCADE,
     daytime VARCHAR(64) NOT NULL,
     hall VARCHAR(32) NOT NULL,
     rows INTEGER NOT NULL,

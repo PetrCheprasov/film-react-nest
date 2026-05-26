@@ -1,17 +1,24 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  RelationId,
+} from 'typeorm';
 import { Film } from './film.entity';
 
 @Entity('schedules')
 export class Schedule {
-  @PrimaryColumn({ type: 'varchar', length: 36 })
+  @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Column({ name: 'film_id', type: 'varchar', length: 36 })
-  filmId: string;
 
   @ManyToOne(() => Film, (film) => film.schedules, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'film_id' })
   film: Film;
+
+  @RelationId((schedule: Schedule) => schedule.film)
+  filmId: string;
 
   @Column({ type: 'varchar', length: 64 })
   daytime: string;
