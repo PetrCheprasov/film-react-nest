@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { NotFoundException, Injectable } from '@nestjs/common';
 import { ListResponseDto } from '../common/dto/list-response.dto';
 import { FilmsRepository } from '../repository/films.repository';
 import { FilmDto, ScheduleDto } from './dto/films.dto';

@@ -17,6 +17,9 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
   await app.listen(port);
+  console.log(`Backend: http://localhost:${port}/api/afisha`);
 }
+
 bootstrap();

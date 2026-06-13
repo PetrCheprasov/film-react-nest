@@ -3,7 +3,6 @@ import { randomUUID } from 'node:crypto';
 import { ListResponseDto } from '../common/dto/list-response.dto';
 import { FilmsRepository } from '../repository/films.repository';
 import { CreateOrderDto, OrderTicketResultDto } from './dto/order.dto';
-import { TicketDto } from './dto/ticket.dto';
 
 @Injectable()
 export class OrderService {
@@ -13,7 +12,7 @@ export class OrderService {
     order: CreateOrderDto,
   ): Promise<ListResponseDto<OrderTicketResultDto>> {
     const seatsBySession = new Map<string, string[]>();
-    const ticketsBySession = new Map<string, TicketDto[]>();
+    const ticketsBySession = new Map<string, CreateOrderDto['tickets']>();
 
     for (const ticket of order.tickets) {
       const seatKey = `${ticket.row}:${ticket.seat}`;
@@ -53,6 +52,7 @@ export class OrderService {
       }
 
       const tickets = ticketsBySession.get(sessionKey) ?? [];
+
       for (const ticket of tickets) {
         results.push({
           id: randomUUID(),
