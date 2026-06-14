@@ -20,7 +20,7 @@ export const fixtures = {
     {
       id: 'session-1',
       daytime: '2024-01-01T10:00:00',
-      hall: '1',
+      hall: 1,
       rows: 5,
       seats: 10,
       price: 350,
