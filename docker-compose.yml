@@ -6,10 +6,82 @@ services:
       POSTGRES_USER: exampleuser
       POSTGRES_PASSWORD: examplepassword
       POSTGRES_DB: exampledb
-    ports:
-      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./backend/test/prac.init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./backend/test/prac.films.sql:/docker-entrypoint-initdb.d/02-films.sql:ro
+      - ./backend/test/prac.shedules.sql:/docker-entrypoint-initdb.d/03-schedules.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U exampleuser -d exampledb']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - '8080:80'
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  backend:
+    image: ghcr.io/petrcheprasov/film-react-nest-backend:latest
+    build:
+      context: ./backend
+    container_name: backend_container
+    environment:
+      DATABASE_DRIVER: postgres
+      DATABASE_URL: postgres://postgres:5432/exampledb
+      DATABASE_USERNAME: exampleuser
+      DATABASE_PASSWORD: examplepassword
+      PORT: 3000
+      NODE_ENV: production
+      LOGGER: tskv
+    depends_on:
+      postgres:
+        condition: service_healthy
+    expose:
+      - '3000'
+
+  frontend:
+    image: ghcr.io/petrcheprasov/film-react-nest-frontend:latest
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: /api/afisha
+        VITE_CDN_URL: /content/afisha
+    container_name: frontend_container
+    volumes:
+      - frontend_dist:/volume
+    healthcheck:
+      test: ['CMD', 'test', '-f', '/volume/index.html']
+      interval: 2s
+      timeout: 2s
+      retries: 15
+
+  nginx:
+    image: ghcr.io/petrcheprasov/film-react-nest-nginx:latest
+    build:
+      context: ./nginx
+    container_name: nginx_container
+    ports:
+      - '80:80'
+    volumes:
+      - frontend_dist:/usr/share/nginx/html:ro
+    depends_on:
+      frontend:
+        condition: service_healthy
+      backend:
+        condition: service_started
 
 volumes:
   postgres_data:
+  pgadmin_data:
+  frontend_dist:
