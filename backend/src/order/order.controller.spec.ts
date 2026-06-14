@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FilmsRepository } from '../repository/films.repository';
 import { fixtures } from '../films/films.fixtures';
 import { OrderController } from './order.controller';
 import { OrderService } from './order.service';

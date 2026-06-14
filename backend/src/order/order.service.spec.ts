@@ -48,10 +48,7 @@ describe('OrderService', () => {
   it('should reject duplicate seats in one order', async () => {
     const order = {
       ...fixtures.order,
-      tickets: [
-        fixtures.order.tickets[0],
-        { ...fixtures.order.tickets[0] },
-      ],
+      tickets: [fixtures.order.tickets[0], { ...fixtures.order.tickets[0] }],
     };
 
     await expect(service.createOrder(order)).rejects.toThrow(HttpException);

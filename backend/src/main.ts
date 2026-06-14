@@ -1,8 +1,8 @@
+import 'dotenv/config';
 import { LoggerService, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import 'dotenv/config';
 import { DevLogger } from './logger/dev.logger';
 import { JsonLogger } from './logger/json.logger';
 import { TskvLogger } from './logger/tskv.logger';
