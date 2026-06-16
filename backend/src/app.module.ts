@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -6,6 +7,8 @@ import { AppConfigModule } from './app-config.module';
 import { FilmsModule } from './films/films.module';
 import { OrderModule } from './order/order.module';
 import { DatabaseModule } from './repository/database/database.module';
+
+const isMongo = process.env.DATABASE_DRIVER === 'mongodb';
 
 @Module({
   imports: [
@@ -19,7 +22,7 @@ import { DatabaseModule } from './repository/database/database.module';
       serveRoot: '/content/afisha',
     }),
     AppConfigModule,
-    DatabaseModule,
+    ...(isMongo ? [] : [DatabaseModule]),
     FilmsModule,
     OrderModule,
   ],

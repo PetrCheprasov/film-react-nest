@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 import {
   ArrayMinSize,
   IsArray,
@@ -12,6 +12,19 @@ export class CreateOrderDto {
   @IsEmail()
   email: string;
 
+  @Transform(({ value }) => {
+    if (typeof value !== 'string') {
+      return value;
+    }
+
+    const digits = value.replace(/\D/g, '');
+
+    if (digits.length === 11 && digits.startsWith('7')) {
+      return `+${digits}`;
+    }
+
+    return value;
+  })
   @Matches(/^\+7\d{10}$/)
   phone: string;
 

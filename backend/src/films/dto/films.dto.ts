@@ -37,8 +37,8 @@ export class ScheduleDto {
   daytime: string;
 
   @Expose()
-  @Transform(({ value }) => String(value))
-  hall: string;
+  @Transform(({ value }) => Number(value))
+  hall: number;
 
   @Expose()
   rows: number;

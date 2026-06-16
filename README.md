@@ -1,4 +1,9 @@
 # FILM!
+## Деплой
+
+- Сайт: http://film-petr.nomorepartiessite.ru
+
+- IP: http://111.88.157.137
 
 ## Установка
 
